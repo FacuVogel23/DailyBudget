@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Xcode - User settings
+xcuserdata/
+
+# Xcode - Temporary files
+*.xcuserstate
+
+# Build folders
+build/
+DerivedData/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+
+# Swift Package Manager
+.swiftpm/
