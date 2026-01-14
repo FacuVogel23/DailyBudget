@@ -58,7 +58,7 @@ This project is part of my learning journey in iOS development, following the **
 
 ## 🎥 Demo Video
 
-[Watch demo video](screenshots/demo.mp4)
+[▶️ Click here to watch the demo video](https://github.com/FacuVogel23/DailyBudget/raw/main/screenshots/demo.mp4)
 
 ---
 
