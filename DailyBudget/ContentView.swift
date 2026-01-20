@@ -183,13 +183,15 @@ struct ContentView: View {
                         .padding(.top, 5)
                         .padding(.bottom, 5)
                         
-                        Text("Dinero restante: $\(dineroDisponible, specifier: "%.2f")")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(dineroDisponible == 0 ? .red : .white)
-                            .padding()
-                            .background(.ultraThinMaterial)
-                            .clipShape(.rect(cornerRadius: 15))
+                        withAnimation {
+                            Text("Dinero restante: $\(dineroDisponible, specifier: "%.2f")")
+                                .font(.title2)
+                                .bold()
+                                .foregroundStyle(dineroDisponible == 0 ? .red : .white)
+                                .padding()
+                                .background(.ultraThinMaterial)
+                                .clipShape(.rect(cornerRadius: 15))
+                        }
                         
                     }
                 }
@@ -222,9 +224,13 @@ struct ContentView: View {
             }
             
             if let clave = claveExistente {
-                gastos[clave]! += monto
+                withAnimation {
+                    gastos[clave]! += monto
+                }
             } else {
-                gastos[nombre] = monto
+                withAnimation {
+                    gastos[nombre] = monto
+                }
             }
         }
         
