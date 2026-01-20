@@ -47,6 +47,10 @@ struct ContentView: View {
     
     @FocusState private var fieldIsFocused: Bool
     
+    @State private var alertaIsVisible: Bool = false
+    
+    @State private var montoExcedido: Double = 0.0
+    
     var dineroDisponible: Double {
         
         let gastosValores = Array(gastos.values)
@@ -56,11 +60,9 @@ struct ContentView: View {
             sumaGastos += gastoValor
         }
         
-        if sumaGastos <= presupuestoDiario {
-            return presupuestoDiario - sumaGastos
-        } else {
-            return 0.0
-        }
+        let restante = presupuestoDiario - sumaGastos
+        
+        return restante >= 0 ? restante : 0
     }
     
     var body: some View {
@@ -206,31 +208,60 @@ struct ContentView: View {
                     .fontWeight(.bold)
                 }
             }
+            .alert("⚠️ Presupuesto Excedido", isPresented: $alertaIsVisible) {
+                Button("OK") {
+                    alertaIsVisible = false
+                }
+            } message: {
+                Text("El gasto de $\(montoExcedido, specifier: "%.2f") excede tu presupuesto disponible.")
+            }
+            .frame(minWidth: 200)
+
         }
     }
     
     func addNewGasto (nombre: String, monto: Double) {
         
+        if nombre == "" || monto == 0.0 {
+            nuevoGastoNombre = ""
+            nuevoGastoMonto = 0.0
+            fieldIsFocused = false
+            return
+        }
+        
+        let gastosValores = Array(gastos.values)
+        var sumaGastosActual = 0.0
+        for gastoValor in gastosValores {
+            sumaGastosActual += gastoValor
+        }
+        
+        let totalConNuevoGasto = sumaGastosActual + monto
+        if totalConNuevoGasto > presupuestoDiario {
+            montoExcedido = monto
+            alertaIsVisible = true
+            nuevoGastoNombre = ""
+            nuevoGastoMonto = 0.0
+            fieldIsFocused = false
+            return
+        }
+        
         let nombreMinusculas = nombre.lowercased()
         var claveExistente: String? = nil
         
-        if nombre != "" && monto != 0.0 {
-            
-            for clave in gastos.keys {
-                if clave.lowercased() == nombreMinusculas {
-                    claveExistente = clave
-                    break
-                }
+        for clave in gastos.keys {
+            if clave.lowercased() == nombreMinusculas {
+                claveExistente = clave
+                break
             }
-            
-            if let clave = claveExistente {
-                withAnimation {
-                    gastos[clave]! += monto
-                }
-            } else {
-                withAnimation {
-                    gastos[nombre] = monto
-                }
+        }
+    
+        if let clave = claveExistente {
+            withAnimation {
+                gastos[clave]! += monto
+            }
+        } else {
+            withAnimation {
+                gastos[nombre] = monto
             }
         }
         
@@ -238,6 +269,7 @@ struct ContentView: View {
         nuevoGastoMonto = 0.0
         fieldIsFocused = false
     }
+    
 }
 
 #Preview {
